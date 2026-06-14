@@ -68,7 +68,7 @@ export function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             <ThemeToggle />
             <Link
-              href="#"
+              href="/login"
               className="text-sm text-muted transition-colors hover:text-ink px-2"
             >
               Sign in
@@ -117,11 +117,18 @@ export function Navbar() {
             ))}
             <div className="mt-6 flex flex-col gap-3 border-t border-hairline pt-6">
               <Link
-                href="#"
+                href="/login"
                 onClick={() => setMobileOpen(false)}
                 className="rounded-lg px-4 py-3 text-center text-muted hover:bg-surface-card"
               >
                 Sign in
+              </Link>
+              <Link
+                href="/signup"
+                onClick={() => setMobileOpen(false)}
+                className="rounded-lg px-4 py-3 text-center text-muted hover:bg-surface-card"
+              >
+                Create account
               </Link>
               <Link
                 href="#pricing"

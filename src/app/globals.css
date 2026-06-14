@@ -1,4 +1,7 @@
-@import "tailwindcss";
+@import "@heroui/styles";
+@source "../../node_modules/@heroui/react/dist/**/*.{js,ts,jsx,tsx}";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -23,6 +26,20 @@
   --accent-teal: #5db8a6;
   --accent-amber: #e8a55a;
   --success: #5db872;
+}
+
+/* HeroUI accent — align with Seller7 coral brand */
+@layer theme {
+  :root,
+  .light,
+  .default,
+  [data-theme="light"],
+  [data-theme="default"],
+  .dark,
+  [data-theme="dark"] {
+    --accent: #cc785c;
+    --accent-foreground: #ffffff;
+  }
 }
 
 .dark {
