@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { toast } from "@/components/ui/heroui";
 import { authApi } from "@/lib/api/auth";
 import { ApiError } from "@/lib/api/client";
 import type { SafeUser } from "@/lib/api/types";
@@ -56,6 +57,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       accessToken: data?.accessToken ?? null,
       isLoading: false,
     });
+    toast.success("Logged in", {
+      description: data?.user?.name ? `Welcome back, ${data.user.name}.` : undefined,
+    });
   }, []);
 
   const signup = useCallback(
@@ -79,6 +83,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
     setState({ user: null, accessToken: null, isLoading: false });
+    toast.success("Logged out", {
+      description: "You've been signed out of your account.",
+    });
   }, [state.accessToken]);
 
   return (

@@ -23,6 +23,8 @@ export {
   Tabs,
   TextField,
   TextArea,
+  Toast,
+  toast,
   Tooltip,
 } from "@heroui/react";
 

@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toast } from "@/components/ui/heroui";
 import { AuthProvider } from "@/context/auth-context";
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
@@ -77,6 +78,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <AuthProvider>{children}</AuthProvider>
+          <Toast.Provider placement="top" />
         </ThemeProvider>
       </body>
     </html>
