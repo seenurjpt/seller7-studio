@@ -36,7 +36,9 @@ export function UserMenu({ compact = false }: { compact?: boolean }) {
   return (
     <Dropdown.Root>
       <Dropdown.Trigger
-        className="flex w-full items-center gap-2.5 rounded-lg p-2 text-left transition-colors hover:bg-surface-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+        className={`flex items-center gap-2.5 rounded-lg p-2 text-left transition-colors hover:bg-surface-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 ${
+          compact ? "justify-center" : "w-full"
+        }`}
         aria-label="Open user menu"
       >
         <Avatar size="sm">

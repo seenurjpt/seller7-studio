@@ -7,9 +7,10 @@ import type { NavItem as NavItemType } from "./nav-config";
 interface NavItemProps {
   item: NavItemType;
   onClick?: () => void;
+  collapsed?: boolean;
 }
 
-export function NavItem({ item, onClick }: NavItemProps) {
+export function NavItem({ item, onClick, collapsed = false }: NavItemProps) {
   const pathname = usePathname();
   const isActive =
     item.href === "/dashboard"
@@ -23,8 +24,10 @@ export function NavItem({ item, onClick }: NavItemProps) {
       href={item.href}
       onClick={onClick}
       aria-current={isActive ? "page" : undefined}
+      title={collapsed ? item.label : undefined}
       className={[
-        "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+        "relative flex items-center rounded-lg py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+        collapsed ? "justify-center px-0" : "gap-3 px-3",
         isActive
           ? "bg-primary/10 text-primary"
           : "text-muted hover:bg-surface-card hover:text-ink",
@@ -37,7 +40,7 @@ export function NavItem({ item, onClick }: NavItemProps) {
         />
       )}
       <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-      <span>{item.label}</span>
+      {!collapsed && <span>{item.label}</span>}
     </Link>
   );
 }

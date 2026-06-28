@@ -132,7 +132,7 @@ export function Pricing() {
 
               {/* Button — always at the same vertical slot */}
               <Link
-                href="#"
+                href="/dashboard/billing"
                 className={`mt-5 inline-flex h-10 shrink-0 items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 ${
                   tier.featured
                     ? "bg-canvas text-ink hover:bg-surface-soft group-hover:shadow-md"

@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -23,6 +24,7 @@ type AuthContextValue = AuthState & {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  setCredits: (credits: number) => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -34,8 +36,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading: true,
   });
 
-  // Silent refresh on mount — restores session from httpOnly refresh cookie
+  // Silent refresh on mount — restores session from httpOnly refresh cookie.
+  // Guard against React StrictMode's double-invoke in dev: a second refresh
+  // would replay the same (rotated) token and trip the backend's reuse
+  // detection, wiping the session and logging the user out on every reload.
+  const didInit = useRef(false);
   useEffect(() => {
+    if (didInit.current) return;
+    didInit.current = true;
     authApi
       .refresh()
       .then(({ data }) => {
@@ -88,8 +96,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }, [state.accessToken]);
 
+  const setCredits = useCallback((credits: number) => {
+    setState((prev) =>
+      prev.user ? { ...prev, user: { ...prev.user, credits } } : prev,
+    );
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ ...state, login, signup, logout }}>
+    <AuthContext.Provider value={{ ...state, login, signup, logout, setCredits }}>
       {children}
     </AuthContext.Provider>
   );
