@@ -25,6 +25,7 @@ type AuthContextValue = AuthState & {
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   setCredits: (credits: number) => void;
+  updateUser: (updates: Partial<SafeUser>) => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -102,8 +103,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const updateUser = useCallback((updates: Partial<SafeUser>) => {
+    setState((prev) =>
+      prev.user ? { ...prev, user: { ...prev.user, ...updates } } : prev,
+    );
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ ...state, login, signup, logout, setCredits }}>
+    <AuthContext.Provider
+      value={{ ...state, login, signup, logout, setCredits, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

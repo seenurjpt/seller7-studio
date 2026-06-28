@@ -1,9 +1,10 @@
 "use client";
 
 import { SpikeMark } from "@/components/ui/SpikeMark";
-import { Drawer, useOverlayState } from "@heroui/react";
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { useOverlayState } from "@heroui/react";
+import { PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 import Link from "next/link";
+import { useEffect } from "react";
 import { navGroups } from "./nav-config";
 import { NavItem } from "./NavItem";
 import { CreditsChip } from "./CreditsChip";
@@ -16,6 +17,18 @@ interface SidebarProps {
 }
 
 export function Sidebar({ drawerState, collapsed, onToggleCollapsed }: SidebarProps) {
+  const { isOpen, close } = drawerState;
+
+  // Lock body scroll while the mobile drawer is open.
+  useEffect(() => {
+    if (!isOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen]);
+
   return (
     <>
       {/* Desktop fixed sidebar */}
@@ -31,31 +44,47 @@ export function Sidebar({ drawerState, collapsed, onToggleCollapsed }: SidebarPr
         />
       </aside>
 
-      {/* Mobile drawer (off-canvas) — always full width */}
-      <Drawer.Root state={drawerState}>
-        <Drawer.Backdrop isDismissable />
-        <Drawer.Content placement="left" className="w-[260px] max-w-[85vw]">
-          <Drawer.Dialog>
-            <Drawer.Header className="flex h-14 items-center justify-between border-b border-hairline px-4">
-              <Drawer.Heading className="sr-only">Navigation menu</Drawer.Heading>
-              <Link href="/dashboard" className="flex items-center gap-2.5">
-                <SpikeMark size={18} className="text-primary" />
-                <div>
-                  <div className="text-sm font-semibold text-ink leading-none">Seller7</div>
-                  <div className="text-[10px] text-muted leading-none mt-0.5">Studio</div>
-                </div>
-              </Link>
-              <Drawer.CloseTrigger
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-soft hover:text-ink"
-                aria-label="Close navigation"
-              />
-            </Drawer.Header>
-            <Drawer.Body className="flex flex-col gap-0 overflow-y-auto p-0">
-              <SidebarInner onNavClick={drawerState.close} isDrawer />
-            </Drawer.Body>
-          </Drawer.Dialog>
-        </Drawer.Content>
-      </Drawer.Root>
+      {/* Mobile off-canvas — fully controlled (no portal/inert magic) */}
+      {/* Backdrop */}
+      <div
+        onClick={close}
+        aria-hidden="true"
+        className={`fixed inset-0 z-40 bg-ink/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+      {/* Panel */}
+      <aside
+        aria-label="Navigation menu"
+        className={`fixed inset-y-0 left-0 z-50 flex w-[280px] max-w-[85vw] flex-col border-r border-hairline bg-canvas shadow-xl transition-transform duration-300 ease-out md:hidden ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex h-14 shrink-0 items-center justify-between border-b border-hairline px-4">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2.5"
+            onClick={close}
+          >
+            <SpikeMark size={18} className="text-primary" />
+            <div>
+              <div className="text-sm font-semibold text-ink leading-none">Seller7</div>
+              <div className="text-[10px] text-muted leading-none mt-0.5">Studio</div>
+            </div>
+          </Link>
+          <button
+            type="button"
+            onClick={close}
+            aria-label="Close navigation"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-soft hover:text-ink"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="min-h-0 flex-1">
+          <SidebarInner onNavClick={close} isDrawer />
+        </div>
+      </aside>
     </>
   );
 }

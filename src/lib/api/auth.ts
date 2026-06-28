@@ -21,6 +21,17 @@ export const authApi = {
   resetPassword: (token: string, newPassword: string) =>
     apiClient.post<null>("/auth/reset-password", { token, newPassword }),
 
+  changePassword: (
+    currentPassword: string,
+    newPassword: string,
+    accessToken: string,
+  ) =>
+    apiClient.post<null>(
+      "/auth/change-password",
+      { currentPassword, newPassword },
+      { Authorization: `Bearer ${accessToken}` },
+    ),
+
   getMe: (accessToken: string) =>
     apiClient.get<SafeUser>("/users/me", {
       Authorization: `Bearer ${accessToken}`,

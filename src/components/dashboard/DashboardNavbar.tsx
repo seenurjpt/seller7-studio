@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Menu, Bell, Sparkles } from "lucide-react";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { UserAvatarButton } from "./UserMenu";
 import { getNavLabel } from "./nav-config";
 
@@ -41,9 +40,6 @@ export function DashboardNavbar({ onMenuClick }: DashboardNavbarProps) {
           <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
           <span>New creative</span>
         </Link>
-
-        {/* Theme toggle */}
-        <ThemeToggle />
 
         {/* Notifications */}
         <button
